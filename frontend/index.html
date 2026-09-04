@@ -8,12 +8,27 @@
 </head>
 <body>
 
+    <!-- ── Header ────────────────────────────────────────────────── -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <span id="current-date"></span>
+        </div>
+        <div class="brand">
+            <div class="logo">🦷</div>
+            <div class="title">Sunrise Dental Clinic</div>
+            <div class="tagline">YOUR SMILE, OUR PASSION</div>
+        </div>
+        <div class="nav-right">
+            <!-- Empty on login page -->
+        </div>
+    </nav>
+
     <!-- ── Centered login card ──────────────────────────────────── -->
     <div class="page-center">
         <div class="card card-sm">
-            <h2 style="text-align:center;">🦷 Sunrise Dental Clinic</h2>
+            <h2 style="text-align:center;">Staff Login</h2>
             <p style="text-align:center; color:var(--clr-muted); margin-bottom:1.5rem;">
-                Staff Login
+                Enter your credentials to access the system
             </p>
 
             <div id="login-alert" class="alert"></div>
@@ -32,7 +47,54 @@
         </div>
     </div>
 
+    <!-- ── Footer ──────────────────────────────────────────────────── -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li><span class="icon">📍</span> 45 Galle Road, Colombo 06, Sri Lanka</li>
+                    <li><span class="icon">📞</span> +94 11 234 5678</li>
+                    <li><span class="icon">📧</span> info@sunrisedental.lk</li>
+                    <li><span class="icon">🕐</span> Mon-Fri: 8:00 AM - 6:00 PM<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sat: 9:00 AM - 2:00 PM</li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>System Information</h4>
+                <p>Sunrise Dental Clinic Management System v1.0</p>
+                <p>Full-stack appointment & patient management platform built with Flask, SQLite, and modern web technologies.</p>
+                <p><strong>Support:</strong> support@sunrisedental.lk</p>
+            </div>
+
+            <div class="footer-section">
+                <div class="footer-credits">
+                    <h4>Credits</h4>
+                    <p><strong>Developed by:</strong> Harith Mohammed</p>
+                    <p><strong>Institution:</strong> ICBT Campus</p>
+                    <p><strong>Project:</strong> BSc Advanced Programming Resit</p>
+                    <p><strong>Year:</strong> 2026</p>
+                    <p style="margin-top:.8rem; font-size:.85rem;">Built with Python (Flask), SQLite, HTML5, CSS3, and JavaScript.</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Sunrise Dental Clinic. All rights reserved. | Designed for educational purposes.
+        </div>
+    </footer>
+
     <script src="js/api.js"></script>
     <script src="js/login.js"></script>
+    <script>
+        // Display today's date in header
+        const today = new Date().toLocaleDateString("en-US", {
+            weekday: "short",
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+        });
+        const dateEl = document.getElementById("current-date");
+        if (dateEl) dateEl.textContent = `📅 ${today}`;
+    </script>
 </body>
 </html>

@@ -45,39 +45,76 @@ a:hover { text-decoration: underline; }
 .navbar {
     background: var(--clr-primary);
     color: #fff;
-    padding: .85rem 1.5rem;
-    display: flex;
+    padding: 1rem 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
+    gap: 1rem;
     position: sticky;
     top: 0;
     z-index: 100;
     box-shadow: 0 2px 8px rgba(0,0,0,.15);
 }
 
-.navbar .brand {
-    font-size: 1.3rem;
-    font-weight: 700;
+.navbar .nav-left {
     display: flex;
     align-items: center;
     gap: .5rem;
+    font-size: .85rem;
+    color: rgba(255,255,255,.8);
 }
 
-.navbar .brand span.icon { font-size: 1.6rem; }
+.navbar .brand {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .25rem;
+}
+
+.navbar .brand .logo {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.navbar .brand .title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+}
+
+.navbar .brand .tagline {
+    font-size: .7rem;
+    color: rgba(255,255,255,.75);
+    font-weight: 400;
+    letter-spacing: .05em;
+}
+
+.navbar .nav-right {
+    display: flex;
+    justify-content: flex-end;
+    gap: .5rem;
+}
 
 .navbar button {
     background: rgba(255,255,255,.15);
     color: #fff;
     border: 1px solid rgba(255,255,255,.3);
-    padding: .45rem 1rem;
+    padding: .5rem 1rem;
     border-radius: var(--radius);
     cursor: pointer;
-    font-size: .9rem;
-    transition: background .2s;
+    font-size: .85rem;
+    transition: background .2s, transform .1s;
+    white-space: nowrap;
 }
 
 .navbar button:hover {
     background: rgba(255,255,255,.3);
+    transform: translateY(-1px);
+}
+
+.navbar button:active {
+    transform: translateY(0);
 }
 
 /* ── Layout wrappers ───────────────────────────────────────────── */
@@ -331,6 +368,83 @@ a:hover { text-decoration: underline; }
 
 .back-link:hover { color: var(--clr-primary); }
 
+/* ── Footer ────────────────────────────────────────────────────── */
+.footer {
+    background: #0f172a;
+    color: #94a3b8;
+    padding: 3rem 1.5rem 1.5rem;
+    margin-top: auto;
+    font-size: .9rem;
+    border-top: 1px solid #1e293b;
+}
+
+.footer-content {
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.footer-section h4 {
+    color: #f8fafc;
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+    position: relative;
+    padding-bottom: .4rem;
+}
+
+.footer-section h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background: var(--clr-primary);
+}
+
+.footer-section p {
+    line-height: 1.6;
+    margin-bottom: .6rem;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: .6rem;
+    display: flex;
+    align-items: flex-start;
+    gap: .5rem;
+    line-height: 1.4;
+}
+
+.footer-section ul li .icon {
+    font-size: 1.1rem;
+    color: var(--clr-accent);
+}
+
+.footer-credits {
+    background: #1e293b;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 3px solid var(--clr-accent);
+}
+
+.footer-bottom {
+    max-width: 960px;
+    margin: 0 auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid #334155;
+    text-align: center;
+    font-size: .8rem;
+    color: #64748b;
+}
+
 /* ── Print overrides ───────────────────────────────────────────── */
 @media print {
     body * { visibility: hidden; }
@@ -342,11 +456,24 @@ a:hover { text-decoration: underline; }
         border: none;
         display: block;
     }
-    .btn { display: none !important; }
+    .btn, .navbar, .footer { display: none !important; }
 }
 
 /* ── Responsive tweaks ─────────────────────────────────────────── */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+    .navbar {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .navbar .nav-left {
+        justify-content: center;
+    }
+    .navbar .nav-right {
+        justify-content: center;
+    }
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
     .form-row { grid-template-columns: 1fr; }
-    .navbar { flex-direction: column; gap: .5rem; }
 }
