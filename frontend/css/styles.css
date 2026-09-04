@@ -1,0 +1,352 @@
+/* ================================================================
+   Sunrise Dental Clinic — Stylesheet
+   ================================================================ */
+
+/* ── Reset & base ──────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --clr-primary:    #0e7490;
+    --clr-primary-dk: #0c5f75;
+    --clr-accent:     #f59e0b;
+    --clr-danger:     #dc2626;
+    --clr-success:    #16a34a;
+    --clr-bg:         #f0f9ff;
+    --clr-card:       #ffffff;
+    --clr-text:       #1e293b;
+    --clr-muted:      #64748b;
+    --radius:         10px;
+    --shadow:         0 2px 12px rgba(0, 0, 0, .08);
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--clr-bg);
+    color: var(--clr-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a { color: var(--clr-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Header / nav ──────────────────────────────────────────────── */
+.navbar {
+    background: var(--clr-primary);
+    color: #fff;
+    padding: .85rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+
+.navbar .brand {
+    font-size: 1.3rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.navbar .brand span.icon { font-size: 1.6rem; }
+
+.navbar button {
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.3);
+    padding: .45rem 1rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: .9rem;
+    transition: background .2s;
+}
+
+.navbar button:hover {
+    background: rgba(255,255,255,.3);
+}
+
+/* ── Layout wrappers ───────────────────────────────────────────── */
+.page-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.container {
+    width: 100%;
+    max-width: 960px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+/* ── Cards ─────────────────────────────────────────────────────── */
+.card {
+    background: var(--clr-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2rem;
+}
+
+.card-sm { max-width: 420px; width: 100%; }
+
+.card h2 {
+    margin-bottom: 1.25rem;
+    color: var(--clr-primary);
+    font-size: 1.35rem;
+}
+
+/* ── Forms ─────────────────────────────────────────────────────── */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: .3rem;
+    font-weight: 600;
+    font-size: .9rem;
+    color: var(--clr-text);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: .55rem .75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: .95rem;
+    transition: border-color .2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--clr-primary);
+    box-shadow: 0 0 0 3px rgba(14,116,144,.15);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────── */
+.btn {
+    display: inline-block;
+    padding: .6rem 1.4rem;
+    border: none;
+    border-radius: 6px;
+    font-size: .95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s, transform .1s;
+}
+
+.btn:active { transform: scale(.97); }
+
+.btn-primary   { background: var(--clr-primary); color: #fff; }
+.btn-primary:hover { background: var(--clr-primary-dk); }
+
+.btn-accent    { background: var(--clr-accent); color: #fff; }
+.btn-accent:hover  { background: #d97706; }
+
+.btn-danger    { background: var(--clr-danger); color: #fff; }
+.btn-danger:hover  { background: #b91c1c; }
+
+.btn-success   { background: var(--clr-success); color: #fff; }
+.btn-success:hover { background: #15803d; }
+
+.btn-block { display: block; width: 100%; margin-top: .75rem; }
+
+/* ── Flash messages ────────────────────────────────────────────── */
+.alert {
+    padding: .75rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: .9rem;
+    display: none;              /* shown via JS */
+}
+
+.alert-error   { background: #fef2f2; color: var(--clr-danger); border: 1px solid #fca5a5; }
+.alert-success { background: #f0fdf4; color: var(--clr-success); border: 1px solid #86efac; }
+
+/* ── Dashboard grid ────────────────────────────────────────────── */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.dash-card {
+    background: var(--clr-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    border-top: 4px solid var(--clr-primary);
+}
+
+.dash-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.12);
+}
+
+.dash-card .icon { font-size: 2.4rem; margin-bottom: .5rem; }
+.dash-card h3    { font-size: 1.05rem; color: var(--clr-primary); }
+.dash-card p     { font-size: .82rem; color: var(--clr-muted); margin-top: .35rem; }
+
+/* ── Sections (register / search / bill / help) ────────────────── */
+.section {
+    display: none;              /* toggled via JS */
+}
+
+.section.active {
+    display: block;
+}
+
+/* ── Detail / result tables ────────────────────────────────────── */
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.detail-table th,
+.detail-table td {
+    text-align: left;
+    padding: .6rem .75rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.detail-table th {
+    width: 40%;
+    color: var(--clr-muted);
+    font-weight: 600;
+    font-size: .85rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+/* ── Receipt (print) ───────────────────────────────────────────── */
+.receipt {
+    display: none;              /* shown via JS */
+    background: #fff;
+    padding: 2rem;
+    border: 1px dashed #cbd5e1;
+    border-radius: var(--radius);
+    margin-top: 1.5rem;
+}
+
+.receipt h3 {
+    text-align: center;
+    margin-bottom: .25rem;
+    color: var(--clr-primary);
+}
+
+.receipt .tagline {
+    text-align: center;
+    font-size: .8rem;
+    color: var(--clr-muted);
+    margin-bottom: 1.25rem;
+}
+
+.receipt table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.receipt table th,
+.receipt table td {
+    padding: .5rem .6rem;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: .92rem;
+}
+
+.receipt table th { text-align: left; color: var(--clr-muted); }
+.receipt table td { text-align: right; }
+
+.receipt .total-row td,
+.receipt .total-row th {
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-top: 2px solid var(--clr-primary);
+    border-bottom: none;
+    padding-top: .75rem;
+}
+
+/* ── Help section ──────────────────────────────────────────────── */
+.help-block {
+    margin-bottom: 1.25rem;
+}
+
+.help-block h4 {
+    color: var(--clr-primary);
+    margin-bottom: .35rem;
+}
+
+.help-block ol {
+    padding-left: 1.25rem;
+}
+
+.help-block li {
+    margin-bottom: .3rem;
+    line-height: 1.5;
+}
+
+/* ── Back button common ────────────────────────────────────────── */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    margin-bottom: 1rem;
+    font-size: .9rem;
+    color: var(--clr-muted);
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+}
+
+.back-link:hover { color: var(--clr-primary); }
+
+/* ── Print overrides ───────────────────────────────────────────── */
+@media print {
+    body * { visibility: hidden; }
+    .receipt, .receipt * { visibility: visible; }
+    .receipt {
+        position: absolute;
+        left: 0; top: 0;
+        width: 100%;
+        border: none;
+        display: block;
+    }
+    .btn { display: none !important; }
+}
+
+/* ── Responsive tweaks ─────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .form-row { grid-template-columns: 1fr; }
+    .navbar { flex-direction: column; gap: .5rem; }
+}
