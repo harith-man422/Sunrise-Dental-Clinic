@@ -2,6 +2,39 @@
  * Sunrise Dental Clinic — Billing & receipt logic.
  */
 
+/* ── Load active appointments for billing dropdown ─────────────– */
+async function loadBillingAppointments() {
+    const { ok, data } = await api("/appointments/list/active");
+
+    if (!ok) {
+        document.getElementById("bill-appt-dropdown").innerHTML =
+            '<option value="">Error loading appointments</option>';
+        return;
+    }
+
+    const dropdown = document.getElementById("bill-appt-dropdown");
+    dropdown.innerHTML = '<option value="">-- Select an appointment --</option>';
+
+    if (data.length === 0) {
+        dropdown.innerHTML = '<option value="">No active appointments available</option>';
+        return;
+    }
+
+    for (const appt of data) {
+        const option = document.createElement("option");
+        option.value = appt.appointment_no;
+        option.textContent = `${appt.appointment_no} - ${appt.patient_name} (${appt.appointment_date} ${appt.appointment_time})`;
+        dropdown.appendChild(option);
+    }
+}
+
+/* ── Update appointment number when dropdown changes ────────────– */
+function updateBillAppointmentNo() {
+    const selectedValue = document.getElementById("bill-appt-dropdown").value;
+    document.getElementById("bill-appt-no").value = selectedValue;
+}
+
+/* ── Handle bill generation ────────────────────────────────────– */
 async function handleBill(e) {
     e.preventDefault();
     const alertBox   = document.getElementById("bill-alert");
@@ -11,7 +44,7 @@ async function handleBill(e) {
 
     const apptNo = document.getElementById("bill-appt-no").value.trim();
     if (!apptNo) {
-        showAlert(alertBox, "Please enter an appointment number.", "error");
+        showAlert(alertBox, "Please select an appointment from the dropdown.", "error");
         return;
     }
 
@@ -61,6 +94,10 @@ async function markBilledAndRefresh(apptNo) {
         );
         document.getElementById("receipt").style.display = "none";
         document.getElementById("bill-form").reset();
+        document.getElementById("bill-appt-no").value = "";
+
+        // Reload the dropdown
+        loadBillingAppointments();
 
         // Refresh appointments if visible
         if (document.getElementById("section-appointments").classList.contains("active")) {
@@ -74,3 +111,4 @@ async function markBilledAndRefresh(apptNo) {
         );
     }
 }
+

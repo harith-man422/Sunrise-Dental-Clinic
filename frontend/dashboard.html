@@ -198,10 +198,16 @@
 
                 <form id="bill-form" onsubmit="handleBill(event)">
                     <div class="form-group">
-                        <label for="bill-appt-no">Appointment Number</label>
-                        <input type="text" id="bill-appt-no" placeholder="e.g. A1001" required />
+                        <label for="bill-appt-dropdown">Select Active Appointment</label>
+                        <select id="bill-appt-dropdown" required onchange="updateBillAppointmentNo()">
+                            <option value="">-- Loading appointments --</option>
+                        </select>
                     </div>
-                    <button type="submit" class="btn btn-accent btn-block">Generate Bill</button>
+                    <div class="form-group">
+                        <label for="bill-appt-no" style="font-size:.85rem; color:var(--clr-muted);">Appointment Number (Auto-filled)</label>
+                        <input type="text" id="bill-appt-no" placeholder="Auto-filled from dropdown" readonly style="background:#f0f9ff; cursor:not-allowed;" />
+                    </div>
+                    <button type="submit" class="btn btn-accent btn-block">💰 Generate Bill</button>
                 </form>
 
                 <div id="receipt" class="receipt"></div>
@@ -367,6 +373,7 @@
 
             // Load content on visit
             if (name === "appointments") loadAppointments();
+            if (name === "billing") loadBillingAppointments();
             if (name === "help") loadHelp();
             if (name === "staff") loadStaffList();
         }
