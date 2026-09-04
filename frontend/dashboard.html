@@ -47,6 +47,11 @@
                     <h3>Billing</h3>
                     <p>Generate & print patient bills</p>
                 </div>
+                <div class="dash-card" onclick="showSection('staff')">
+                    <div class="icon">👥</div>
+                    <h3>Staff Management</h3>
+                    <p>Add, edit, or remove staff members</p>
+                </div>
                 <div class="dash-card" onclick="showSection('help')">
                     <div class="icon">❓</div>
                     <h3>Help</h3>
@@ -162,6 +167,62 @@
         </div>
 
         <!-- ============================================================
+             STAFF MANAGEMENT
+             ============================================================ -->
+        <div id="section-staff" class="section">
+            <button class="back-link" onclick="showSection('dashboard')">← Back to Dashboard</button>
+            <div class="card">
+                <h2>Staff Management</h2>
+                <div id="staff-alert" class="alert"></div>
+
+                <!-- ── Add New Staff Form ────────────────────────────── -->
+                <div style="background:#f9fafb; padding:1.5rem; border-radius:var(--radius); margin-bottom:2rem;">
+                    <h3 style="color:var(--clr-primary); margin-bottom:1rem;">Add New Staff Member</h3>
+                    <form id="add-staff-form" onsubmit="handleAddStaff(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="new-username">Username</label>
+                                <input type="text" id="new-username" placeholder="e.g. john_doe" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password">Password</label>
+                                <input type="text" id="new-password" placeholder="Min 4 characters" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-role">Role</label>
+                            <select id="new-role" required>
+                                <option value="staff">Staff</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-block">➕ Add Staff Member</button>
+                    </form>
+                </div>
+
+                <!-- ── Staff List Table ──────────────────────────────– -->
+                <h3 style="color:var(--clr-primary); margin-bottom:1rem;">Registered Staff Members</h3>
+                <div style="overflow-x:auto;">
+                    <table id="staff-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Role</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="6" style="text-align:center;">Loading staff list...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
              HELP
              ============================================================ -->
         <div id="section-help" class="section">
@@ -173,6 +234,29 @@
         </div>
 
     </div><!-- /.container -->
+
+    <!-- ── Edit Staff Modal ──────────────────────────────────────────– -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Staff Member</h3>
+                <button class="modal-close" onclick="closeEditModal()">✕</button>
+            </div>
+            <div id="edit-alert" class="alert"></div>
+            <form id="edit-staff-form" class="modal-form" onsubmit="handleEditStaff(event)">
+                <input type="hidden" id="edit-staff-id" />
+                <div class="form-group">
+                    <label for="edit-username">Username</label>
+                    <input type="text" id="edit-username" required />
+                </div>
+                <div class="form-group">
+                    <label for="edit-password">Password</label>
+                    <input type="text" id="edit-password" required />
+                </div>
+                <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+            </form>
+        </div>
+    </div>
 
     <!-- ── Footer ──────────────────────────────────────────────────── -->
     <footer class="footer">
@@ -214,6 +298,7 @@
     <script src="js/api.js"></script>
     <script src="js/appointments.js"></script>
     <script src="js/billing.js"></script>
+    <script src="js/staff.js"></script>
     <script>
         /* ── Auth guard & Init ──────────────────────────────────── */
         (function guardAuth() {
@@ -242,8 +327,9 @@
             const target = document.getElementById(`section-${name}`);
             if (target) target.classList.add("active");
 
-            // Load help content on first visit
+            // Load content on first visit
             if (name === "help") loadHelp();
+            if (name === "staff") loadStaffList();
         }
 
         /* ── Help loader ────────────────────────────────────────── */

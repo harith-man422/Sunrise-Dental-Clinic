@@ -21,6 +21,10 @@ from models import (
     register_appointment,
     find_appointment,
     calculate_bill,
+    get_all_staff,
+    add_staff,
+    update_staff,
+    delete_staff,
     TREATMENT_PRICES,
     CONSULTATION_FEE,
 )
@@ -116,6 +120,58 @@ def treatments():
         "consultation_fee": CONSULTATION_FEE,
         "treatments": TREATMENT_PRICES,
     }), 200
+
+
+# ── Staff Management endpoints ──────────────────────────────────────
+@app.route("/api/staff", methods=["GET"])
+@login_required
+def get_staff():
+    """Get all staff members."""
+    staff_list = get_all_staff()
+    return jsonify(staff_list), 200
+
+
+@app.route("/api/staff", methods=["POST"])
+@login_required
+def create_staff():
+    """Create a new staff member."""
+    data = request.get_json(silent=True) or {}
+    username = data.get("username", "").strip()
+    password = data.get("password", "")
+    role = data.get("role", "staff")
+
+    try:
+        result = add_staff(username, password, role)
+        return jsonify(result), 201
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@app.route("/api/staff/<int:staff_id>", methods=["PUT"])
+@login_required
+def update_staff_member(staff_id):
+    """Update a staff member's username and/or password."""
+    data = request.get_json(silent=True) or {}
+    username = data.get("username")
+    password = data.get("password")
+
+    try:
+        result = update_staff(staff_id, username, password)
+        return jsonify(result), 200
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+@app.route("/api/staff/<int:staff_id>", methods=["DELETE"])
+@login_required
+def delete_staff_member(staff_id):
+    """Delete a staff member."""
+    current_user_id = session.get("user", {}).get("id")
+    try:
+        result = delete_staff(staff_id, current_user_id)
+        return jsonify(result), 200
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
 
 
 # ── Help endpoint ───────────────────────────────────────────────────

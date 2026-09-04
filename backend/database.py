@@ -22,23 +22,36 @@ def get_connection():
 
 
 def hash_password(password: str) -> str:
-    """SHA-256 hash for password storage (adequate for a clinic demo)."""
+    """SHA-256 hash for password storage."""
     return hashlib.sha256(password.encode("utf-8")).hexdigest()
 
 
 def init_db():
-    """Create tables (if missing) and insert seed data."""
+    """Create tables (if missing), migrate columns, and insert seed data."""
     conn = get_connection()
     cursor = conn.cursor()
 
     # ── Staff users table ────────────────────────────────────────────
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS staff (
-            id            INTEGER PRIMARY KEY AUTOINCREMENT,
-            username      TEXT    NOT NULL UNIQUE,
-            password_hash TEXT    NOT NULL
+            id             INTEGER PRIMARY KEY AUTOINCREMENT,
+            username       TEXT    NOT NULL UNIQUE,
+            password_hash  TEXT    NOT NULL,
+            password_plain TEXT    NOT NULL DEFAULT '',
+            role           TEXT    NOT NULL DEFAULT 'staff',
+            created_at     TEXT    DEFAULT CURRENT_TIMESTAMP
         )
     """)
+
+    # Check if existing table needs column migration
+    cursor.execute("PRAGMA table_info(staff)")
+    columns = [row["name"] for row in cursor.fetchall()]
+    if "password_plain" not in columns:
+        cursor.execute("ALTER TABLE staff ADD COLUMN password_plain TEXT NOT NULL DEFAULT ''")
+    if "role" not in columns:
+        cursor.execute("ALTER TABLE staff ADD COLUMN role TEXT NOT NULL DEFAULT 'staff'")
+    if "created_at" not in columns:
+        cursor.execute("ALTER TABLE staff ADD COLUMN created_at TEXT DEFAULT '2026-01-01'")
 
     # ── Appointments table ───────────────────────────────────────────
     cursor.execute("""
@@ -63,13 +76,21 @@ def init_db():
 
     # ── Seed data ────────────────────────────────────────────────────
     # Admin user
-    try:
+    cursor.execute("SELECT id FROM staff WHERE username = ?", ("admin",))
+    admin_row = cursor.fetchone()
+    if admin_row is None:
         cursor.execute(
-            "INSERT INTO staff (username, password_hash) VALUES (?, ?)",
-            ("admin", hash_password("Clinic@123")),
+            """INSERT INTO staff (username, password_hash, password_plain, role)
+               VALUES (?, ?, ?, ?)""",
+            ("admin", hash_password("Clinic@123"), "Clinic@123", "admin"),
         )
-    except sqlite3.IntegrityError:
-        pass  # admin already exists
+    else:
+        # Ensure password_plain is set for admin
+        cursor.execute(
+            """UPDATE staff SET password_plain = ?, role = 'admin'
+               WHERE username = 'admin' AND (password_plain IS NULL OR password_plain = '')""",
+            ("Clinic@123",),
+        )
 
     # Sample appointment
     try:

@@ -368,6 +368,128 @@ a:hover { text-decoration: underline; }
 
 .back-link:hover { color: var(--clr-primary); }
 
+/* ── Staff Management ──────────────────────────────────────────── */
+#staff-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    background: #fff;
+}
+
+#staff-table th {
+    background: var(--clr-primary);
+    color: #fff;
+    padding: .75rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: .9rem;
+}
+
+#staff-table td {
+    padding: .75rem;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: .9rem;
+}
+
+#staff-table tr:hover {
+    background: #f9fafb;
+}
+
+.btn-small {
+    display: inline-block;
+    padding: .4rem .75rem;
+    border: none;
+    border-radius: 4px;
+    font-size: .8rem;
+    cursor: pointer;
+    transition: transform .1s;
+    margin-right: .25rem;
+}
+
+.btn-small:hover { transform: scale(1.05); }
+
+.badge {
+    display: inline-block;
+    padding: .35rem .6rem;
+    border-radius: 20px;
+    font-size: .75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.badge-admin {
+    background: #fef08a;
+    color: #854d0e;
+}
+
+.badge-staff {
+    background: #dbeafe;
+    color: #0c4a6e;
+}
+
+/* ── Modal (Edit Staff) ────────────────────────────────────────── */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--clr-card);
+    border-radius: var(--radius);
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0,0,0,.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--clr-primary);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--clr-muted);
+}
+
+.modal-close:hover { color: var(--clr-text); }
+
+.modal-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.modal-form button {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* ── Footer alignment fix ──────────────────────────────────────– */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container, .page-center {
+    flex: 1;
+}
+
 /* ── Footer ────────────────────────────────────────────────────── */
 .footer {
     background: #0f172a;
