@@ -18,13 +18,13 @@ async function handleBill(e) {
     const { ok, data } = await api(`/bill/${encodeURIComponent(apptNo)}`);
 
     if (ok) {
-        renderReceipt(data, receiptDiv);
+        renderReceipt(data, receiptDiv, apptNo);
     } else {
         showAlert(alertBox, data.error || "Could not generate bill.", "error");
     }
 }
 
-function renderReceipt(bill, container) {
+function renderReceipt(bill, container, apptNo) {
     container.innerHTML = `
         <h3>🦷 Sunrise Dental Clinic</h3>
         <p class="tagline">Your smile, our passion</p>
@@ -42,7 +42,35 @@ function renderReceipt(bill, container) {
 
         <div style="text-align:center; margin-top:1.25rem;">
             <button class="btn btn-primary" onclick="window.print()">🖨️ Print Receipt</button>
+            <button class="btn btn-success" onclick="markBilledAndRefresh('${apptNo}')" style="margin-left:.5rem;">✅ Mark as Billed</button>
         </div>
     `;
     container.style.display = "block";
+}
+
+async function markBilledAndRefresh(apptNo) {
+    const { ok, data } = await api(`/bill/${apptNo}/confirm`, {
+        method: "POST",
+    });
+
+    if (ok) {
+        showAlert(
+            document.getElementById("bill-alert"),
+            "Appointment marked as billed and moved to history!",
+            "success"
+        );
+        document.getElementById("receipt").style.display = "none";
+        document.getElementById("bill-form").reset();
+
+        // Refresh appointments if visible
+        if (document.getElementById("section-appointments").classList.contains("active")) {
+            loadAppointments();
+        }
+    } else {
+        showAlert(
+            document.getElementById("bill-alert"),
+            data.error || "Failed to mark as billed.",
+            "error"
+        );
+    }
 }

@@ -20,6 +20,9 @@ from models import (
     authenticate,
     register_appointment,
     find_appointment,
+    get_all_appointments,
+    get_appointment_history,
+    mark_appointment_billed,
     calculate_bill,
     get_all_staff,
     add_staff,
@@ -110,6 +113,34 @@ def bill(appointment_no):
         return jsonify(result), 200
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
+
+
+@app.route("/api/bill/<appointment_no>/confirm", methods=["POST"])
+@login_required
+def confirm_bill(appointment_no):
+    """Mark an appointment as billed after printing/confirmation."""
+    try:
+        result = mark_appointment_billed(appointment_no)
+        return jsonify(result), 200
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+
+# ── Appointments list endpoints ─────────────────────────────────────
+@app.route("/api/appointments/list/active", methods=["GET"])
+@login_required
+def list_active_appointments():
+    """Get all active (not yet billed) appointments."""
+    appointments = get_all_appointments()
+    return jsonify(appointments), 200
+
+
+@app.route("/api/appointments/list/history", methods=["GET"])
+@login_required
+def list_appointment_history():
+    """Get all billed/completed appointments."""
+    history = get_appointment_history()
+    return jsonify(history), 200
 
 
 # ── Treatments reference ────────────────────────────────────────────

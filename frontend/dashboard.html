@@ -37,10 +37,10 @@
                     <h3>Register Appointment</h3>
                     <p>Book a new patient appointment</p>
                 </div>
-                <div class="dash-card" onclick="showSection('search')">
-                    <div class="icon">🔍</div>
-                    <h3>Search Appointment</h3>
-                    <p>Look up appointment details</p>
+                <div class="dash-card" onclick="showSection('appointments')">
+                    <div class="icon">📋</div>
+                    <h3>Appointments</h3>
+                    <p>View and manage all appointments</p>
                 </div>
                 <div class="dash-card" onclick="showSection('billing')">
                     <div class="icon">💰</div>
@@ -125,23 +125,65 @@
         </div>
 
         <!-- ============================================================
-             SEARCH APPOINTMENT
+             APPOINTMENTS
              ============================================================ -->
-        <div id="section-search" class="section">
+        <div id="section-appointments" class="section">
             <button class="back-link" onclick="showSection('dashboard')">← Back to Dashboard</button>
             <div class="card">
-                <h2>Search Appointment</h2>
-                <div id="search-alert" class="alert"></div>
+                <h2>Appointments</h2>
+                <div id="appt-alert" class="alert"></div>
 
-                <form id="search-form" onsubmit="handleSearch(event)">
-                    <div class="form-group">
-                        <label for="search-appt-no">Appointment Number</label>
-                        <input type="text" id="search-appt-no" placeholder="e.g. A1001" required />
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Search</button>
-                </form>
+                <!-- ── Search Form ──────────────────────────────────– -->
+                <div style="background:#f9fafb; padding:1rem; border-radius:var(--radius); margin-bottom:1.5rem;">
+                    <h3 style="color:var(--clr-primary); margin-bottom:.75rem; font-size:1rem;">Search Appointment</h3>
+                    <form id="search-form" onsubmit="handleSearch(event)" style="display:flex; gap:.5rem;">
+                        <input type="text" id="search-appt-no" placeholder="Enter appointment number..." style="flex:1; padding:.5rem;" required />
+                        <button type="submit" class="btn btn-primary">🔍 Search</button>
+                    </form>
+                    <div id="search-result" style="display:none; margin-top:1rem;"></div>
+                </div>
 
-                <div id="search-result" style="display:none;"></div>
+                <!-- ── Active Appointments ──────────────────────────– -->
+                <h3 style="color:var(--clr-primary); margin-bottom:1rem;">📋 Active Appointments</h3>
+                <div style="overflow-x:auto; margin-bottom:2rem;">
+                    <table id="active-appt-table">
+                        <thead>
+                            <tr>
+                                <th>Appt No</th>
+                                <th>Patient</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Dentist</th>
+                                <th>Treatment</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="7" style="text-align:center;">Loading appointments...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ── Appointment History ──────────────────────────– -->
+                <h3 style="color:var(--clr-primary); margin-bottom:1rem;">✅ Appointment History (Billed)</h3>
+                <div style="overflow-x:auto;">
+                    <table id="history-appt-table">
+                        <thead>
+                            <tr>
+                                <th>Appt No</th>
+                                <th>Patient</th>
+                                <th>Date</th>
+                                <th>Dentist</th>
+                                <th>Treatment</th>
+                                <th>Billed On</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="7" style="text-align:center;">Loading history...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -235,6 +277,20 @@
 
     </div><!-- /.container -->
 
+    <!-- ── Appointment Details Modal ────────────────────────────────– -->
+    <div id="appt-details-modal" class="modal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header">
+                <h3>Appointment Details</h3>
+                <button class="modal-close" onclick="closeApptModal()">✕</button>
+            </div>
+            <div id="appt-details-content" style="font-size:.95rem;">
+                <!-- Populated by JavaScript -->
+            </div>
+            <button class="btn btn-primary" onclick="closeApptModal()" style="width:100%; margin-top:1rem;">Close</button>
+        </div>
+    </div>
+
     <!-- ── Edit Staff Modal ──────────────────────────────────────────– -->
     <div id="edit-modal" class="modal">
         <div class="modal-content">
@@ -309,7 +365,8 @@
             const target = document.getElementById(`section-${name}`);
             if (target) target.classList.add("active");
 
-            // Load content on first visit
+            // Load content on visit
+            if (name === "appointments") loadAppointments();
             if (name === "help") loadHelp();
             if (name === "staff") loadStaffList();
         }

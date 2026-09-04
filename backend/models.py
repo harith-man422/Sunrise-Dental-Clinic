@@ -263,6 +263,48 @@ def find_appointment(appointment_no: str) -> dict | None:
     return None
 
 
+def get_all_appointments() -> list[dict]:
+    """Return all active (not billed) appointments."""
+    conn = get_connection()
+    rows = conn.execute(
+        "SELECT * FROM appointments WHERE is_billed = 0 ORDER BY appointment_date DESC, appointment_time DESC"
+    ).fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
+
+
+def get_appointment_history() -> list[dict]:
+    """Return all billed/completed appointments."""
+    conn = get_connection()
+    rows = conn.execute(
+        "SELECT * FROM appointments WHERE is_billed = 1 ORDER BY billed_at DESC"
+    ).fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
+
+
+def mark_appointment_billed(appointment_no: str) -> dict:
+    """Mark an appointment as billed and remove it from active list."""
+    from datetime import datetime
+
+    appointment = find_appointment(appointment_no)
+    if appointment is None:
+        raise ValueError(f"Appointment '{appointment_no}' not found.")
+
+    conn = get_connection()
+    try:
+        conn.execute(
+            """UPDATE appointments SET is_billed = 1, billed_at = ?
+               WHERE appointment_no = ?""",
+            (datetime.now().isoformat(), appointment_no),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    return {"success": True}
+
+
 def calculate_bill(appointment_no: str) -> dict:
     """
     Build an itemised bill for the given appointment.

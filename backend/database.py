@@ -64,9 +64,23 @@ def init_db():
             dentist_name      TEXT    NOT NULL,
             treatment_type    TEXT    NOT NULL,
             appointment_date  TEXT    NOT NULL,
-            appointment_time  TEXT    NOT NULL
+            appointment_time  TEXT    NOT NULL,
+            is_billed         INTEGER DEFAULT 0,
+            billed_at         TEXT    DEFAULT NULL,
+            created_at        TEXT    DEFAULT CURRENT_TIMESTAMP
         )
     """)
+
+    # Check if existing appointments table needs column migration
+    cursor.execute("PRAGMA table_info(appointments)")
+    columns = [row["name"] for row in cursor.fetchall()]
+    if "is_billed" not in columns:
+        cursor.execute("ALTER TABLE appointments ADD COLUMN is_billed INTEGER DEFAULT 0")
+    if "billed_at" not in columns:
+        cursor.execute("ALTER TABLE appointments ADD COLUMN billed_at TEXT DEFAULT NULL")
+    if "created_at" not in columns:
+        cursor.execute("ALTER TABLE appointments ADD COLUMN created_at TEXT DEFAULT CURRENT_TIMESTAMP")
+
 
     # Unique index to prevent double-booking (same dentist, date, time)
     cursor.execute("""
