@@ -2,9 +2,9 @@
  * Sunrise Dental Clinic — Billing & receipt logic.
  */
 
-/* ── Load active appointments for billing dropdown ─────────────– */
+/* ── Load registered appointments for billing dropdown ──────────– */
 async function loadBillingAppointments() {
-    const { ok, data } = await api("/appointments/list/active");
+    const { ok, data } = await api("/appointments/list/registered");
 
     if (!ok) {
         document.getElementById("bill-appt-dropdown").innerHTML =
@@ -16,14 +16,15 @@ async function loadBillingAppointments() {
     dropdown.innerHTML = '<option value="">-- Select an appointment --</option>';
 
     if (data.length === 0) {
-        dropdown.innerHTML = '<option value="">No active appointments available</option>';
+        dropdown.innerHTML = '<option value="">No registered appointments available</option>';
         return;
     }
 
     for (const appt of data) {
+        const status = appt.is_billed ? "(Billed)" : "(Pending)";
         const option = document.createElement("option");
         option.value = appt.appointment_no;
-        option.textContent = `${appt.appointment_no} - ${appt.patient_name} (${appt.appointment_date} ${appt.appointment_time})`;
+        option.textContent = `${appt.appointment_no} - ${appt.patient_name} - ${appt.appointment_date} ${appt.appointment_time} ${status}`;
         dropdown.appendChild(option);
     }
 }
@@ -89,7 +90,7 @@ async function markBilledAndRefresh(apptNo) {
     if (ok) {
         showAlert(
             document.getElementById("bill-alert"),
-            "Appointment marked as billed and moved to history!",
+            "Appointment marked as billed!",
             "success"
         );
         document.getElementById("receipt").style.display = "none";
@@ -111,4 +112,5 @@ async function markBilledAndRefresh(apptNo) {
         );
     }
 }
+
 

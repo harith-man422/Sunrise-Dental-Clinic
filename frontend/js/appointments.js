@@ -4,24 +4,25 @@
 
 /* ── Load appointments ─────────────────────────────────────────── */
 async function loadAppointments() {
-    const { ok: ok1, data: activeAppts } = await api("/appointments/list/active");
+    const { ok: ok1, data: registeredAppts } = await api("/appointments/list/registered");
     const { ok: ok2, data: historyAppts } = await api("/appointments/list/history");
 
-    if (ok1) renderActiveAppointments(activeAppts);
+    if (ok1) renderRegisteredAppointments(registeredAppts);
     if (ok2) renderAppointmentHistory(historyAppts);
 }
 
-/* ── Render active appointments ────────────────────────────────── */
-function renderActiveAppointments(appointments) {
+/* ── Render registered appointments ─────────────────────────────– */
+function renderRegisteredAppointments(appointments) {
     const tbody = document.querySelector("#active-appt-table tbody");
     tbody.innerHTML = "";
 
     if (appointments.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:1.5rem;">No active appointments</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:1.5rem;">No registered appointments</td></tr>';
         return;
     }
 
     for (const appt of appointments) {
+        const status = appt.is_billed ? "✅ Billed" : "⏳ Pending";
         const row = document.createElement("tr");
         row.innerHTML = `
             <td><strong>${appt.appointment_no}</strong></td>
@@ -31,7 +32,8 @@ function renderActiveAppointments(appointments) {
             <td>${appt.dentist_name}</td>
             <td>${appt.treatment_type}</td>
             <td>
-                <button class="btn-small btn-primary" onclick="viewAppointmentDetails('${appt.appointment_no}')">👁️ View</button>
+                <span style="font-size:.8rem; padding:.3rem .5rem; border-radius:4px; background:${appt.is_billed ? '#d1fae5' : '#fef3c7'}; color:${appt.is_billed ? '#065f46' : '#92400e'};">${status}</span>
+                <button class="btn-small btn-primary" onclick="viewAppointmentDetails('${appt.appointment_no}')" style="margin-left:.25rem;">👁️</button>
             </td>
         `;
         tbody.appendChild(row);

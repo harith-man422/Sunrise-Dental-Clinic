@@ -21,6 +21,7 @@ from models import (
     register_appointment,
     find_appointment,
     get_all_appointments,
+    get_registered_appointments,
     get_appointment_history,
     mark_appointment_billed,
     calculate_bill,
@@ -132,6 +133,14 @@ def confirm_bill(appointment_no):
 def list_active_appointments():
     """Get all active (not yet billed) appointments."""
     appointments = get_all_appointments()
+    return jsonify(appointments), 200
+
+
+@app.route("/api/appointments/list/registered", methods=["GET"])
+@login_required
+def list_registered_appointments():
+    """Get all registered appointments (both billed and unbilled)."""
+    appointments = get_registered_appointments()
     return jsonify(appointments), 200
 
 

@@ -273,6 +273,17 @@ def get_all_appointments() -> list[dict]:
     return [dict(row) for row in rows]
 
 
+def get_registered_appointments() -> list[dict]:
+    """Return all registered appointments (both billed and unbilled)."""
+    conn = get_connection()
+    rows = conn.execute(
+        "SELECT * FROM appointments ORDER BY appointment_date DESC, appointment_time DESC"
+    ).fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
+
+
+
 def get_appointment_history() -> list[dict]:
     """Return all billed/completed appointments."""
     conn = get_connection()
